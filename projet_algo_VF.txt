@@ -1,0 +1,182 @@
+Algorithme canon :
+
+
+jouerParties()
+changerstock, changersotck2, changerpuissance, changerangle sont des Booléen.
+Stock_player, Stock_player2 sont des entiers initialisés à 0.
+début
+	continuerDeJouer est un booléen initialisé à true
+	input est une chaîne de caractère
+	TANT QUE (continuerDeJouer)
+		jouerPartie()
+		ECRIRE (Voulez-vous rejouer (O : Oui, N : Non) ?")
+		LIRE (input)
+		SI (input = "N" ou "n") Alors
+			continuerDeJouer <- false
+		Fin SI
+	FIN TANT QUE
+fin
+
+jouerPartie()
+début
+	d_player, d_IA, Poudre_player, Angle_player, calcangle_player, calcangle_IA, d_IA_M sont des nombres réel initialisé à 0.
+	Stock_IA, compteur sont des entiers initialisés à 0.
+	Stock_IA ← random(500;1500)
+	ECRIRE("Bienvenue dans notre jeu de tir au canon.
+		Le principe est simple, chaque camps place son stock d'obus dans sa zone de stockage derrière lui en sachant que votre adversersaire se trouve 500m devant vous.
+		Le but étant de détruire le stock ennemi avant qu'il ne détruise le votre.
+		A savoir aussi, le stock de votre ennemi ne peut être placé qu'entre 500 et 1500m devant vous alors attention à ne pas dépasser pour rien !
+		Pour le déroulement de la partie, chaque camps tir chacun son tour et le premier à toucher l'autre gagnera.
+		Alors que le meilleur l'emporte ! ")
+	ECRIRE("Choisissez l'emplacement du stock entre  0 et 1000 m : 
+	LIRE (Stock_player)
+
+
+	TANT QUE ( Stock_player < -1000)
+		Stock_player <= -1000
+		ECRIRE(Vous avez dépassé la borne inférieur donc votre stock est positionné par défaut à : ", Stock_player, "m.")
+		changerstock()
+	FIN TANT QUE
+
+
+	TANT QUE (Stock_player>0)
+		Stock_player ← 0
+		ECRIRE("Vous avez dépassé la borne supérieur donc votre stock est positionné par défaut à : ", Stock_player, "m.")
+		changerstock()
+	FIN TANT QUE
+
+
+	d_player ← 250
+	d_IA ← 250
+	compteur est un entier initialisé à 0
+
+
+	TANT QUE ((Stock_IA + 10 < d_player OU d_player < Stock_IA - 10) ET (Stock_player + 10 < d_IA OU d_IA < Stock_player - 10))
+		compteur ← compteur + 1
+		ECRIRE("Veuillez choisir la puissance de tir entre 50 et 100 % : ")
+		LIRE(reponse)
+		Poudre_player ← reponse
+		TANT QUE (Poudre_player>100)
+			Poudre_player ← 100
+			ECRIRE("Vous avez dépassé la borne supérieur donc votre puissance est positionné par défaut à : ", Poudre_player, "%.")
+			changerpuissance()
+		FIN TANT QUE
+	
+
+
+		TANT QUE (Poudre_player<50)
+			Poudre_player ← 50
+			ECRIRE("Vous avez dépassé la borne inférieur donc votre puissance est positionné par défaut à : ", Poudre_player, "%.")
+			changerpuissance()
+		FIN TANT QUE
+
+
+		ECRIRE("Veuillez choisir l'angle de tir entre 25 et 75° : ")
+		LIRE(reponse)
+		Angle_player ← reponse
+
+		TANT QUE (Angle_player>75)
+			Angle_player ← 75
+			ECRIRE("Vous avez dépassé la borne supérieur donc votre angle est positionné par défaut à : ", Angle_player, "°.")
+			changerangle()
+		FIN TANT QUE
+
+
+		TANT QUE (Angle_player<25)
+			Angle_player ← 25
+			ECRIRE("Vous avez dépassé la borne inférieur donc votre angle est positionné par défaut à : ", Angle_player, "°.")
+			changerangle()
+		FIN TANT QUE
+
+
+		calcangle_player ← sin(2*(Angle_player/(180/PI)))
+		d_player ← ((150*(Poudre_player/100)²*calcangle_player)/10)
+		ECRIRE("Vous avez tiré à :" + d_player + " m.")
+
+
+		SI (Stock_IA + 10 < d_player) ALORS
+			ECRIRE("Votre tir est Trop LONG.")
+		SINON SI (d_player < Stock_IA - 10) ALORS
+			ECRIRE("Votre tir est Trop COURT.")
+		FIN SI
+
+
+		Poudre_IA ← random(50;100)
+		Angle_IA ← random(25;75)
+		calcangle_IA ← sin(2*(Angle_IA/(180/PI)))
+		d_IA ← -((150*(Poudre_IA/100)²* calcangle_IA) /10)
+		d_IA_M ← -d_IA +500
+		ECRIRE("Votre adversaire a tiré avec une puissance de ", Poudre_IA, " % et un angle de ", Angle_IA, "°.")
+		ECRIRE("Votre adversaire a donc tiré en : ", d_IA, " soit à :", d_IA_M, " m de lui.")
+	
+	FIN TANT QUE
+
+	SI (d_player < Stock_IA + 10 ET d_player > Stock_IA - 10) ALORS
+		ECRIRE("Vous avez GAGNER la cible était à ", Stock_IA, "m")
+		ECRIRE("Votre nombre d'essais est de : " + compteur)
+	SINON SI (Stock_player + 10 > d_IA ET d_IA > Stock_player - 10) ALORS
+		ECRIRE("Vous avez PERDU la cible était à ", Stock_IA, "m.")
+		ECRIRE("Votre nombre d'essais est de : ", compteur, ".")
+	FIN SI
+fin
+
+changerstock()
+début
+	changerstock = true
+		TANT QUE(changerstock = true)
+			ECRIRE("Voulez-vous replacer votre stock ? (O : Oui, N : Non)")
+			LIRE(reponse)
+			SI(reponse = 'N' OU 'n' ) ALORS
+				changerstock = false
+				ECRIRE("Votre stock est positionné à ", Stock_player, "m.")
+			SINON SI(reponse = 'O' OU 'o' ) ALORS
+				ECRIRE("Choisissez l'emplacement du stock entre  0 et -1000m : ")
+				LIRE(reponse)
+				Stock_player2 = reponse
+				SINON SI (Stock_player2 < 0 ET Stock_player2 > -1000) ALORS
+					Stock_player ← Stock_player2
+					ECRIRE("Votre stock est positionné à ", Stock_player, "m.")
+			FIN SI
+		FIN TANT QUE
+fin
+
+changerpuissance()
+début
+	Poudre_player2 est un nombre réel initialisé à 0.
+	changerpuissance ← true
+		TANT QUE(changerpuissance ← true )
+			ECRIRE("Voulez-vous changer de puissance ? (O : Oui, N : Non)")
+			LIRE(reponse)
+			SI (reponse = 'N' OU 'n' ) ALORS
+				changerpuissance ← false
+					ECRIRE("Votre puissance est : ", Poudre_player, "%.")
+			SINON SI (reponse = 'O' OU 'o' ) ALORS
+				ECRIRE("Veuillez choisir la puissance de tir entre 50 et 100 % :")
+				Poudre_player2 ← reponse
+				SI(Poudre_player2 < 100 ET Poudre_player2 > 50) ALORS
+					Poudre_player ← Poudre_player2
+					ECRIRE("Votre puissance est : ", Poudre_player, "%.")
+			FIN SI
+		FIN TANT QUE
+fin
+
+changerangle()
+Début
+	Angle_player2 est un nombre réel initialisé à 0.
+	changerangle ← true
+		TANT QUE (changerangle = true)
+			ECRIRE("Voulez-vous changer d'Angle ? (O : Oui, N : Non)")
+			LIRE(reponse)
+			SI (reponse = 'N' OU 'n' ) ALORS
+				changerangle ← false;
+				ECRIRE ("Votre angle est : ", Angle_player, "°.")
+			SINON SI (reponse = 'O' OU 'o' ) ALORS
+				ECRIRE("Veuillez choisir l'angle de tir entre 25 et 75° : ")
+				LIRE(reponse)
+				Angle_player2 ← reponse
+				SI (Angle_player2<75 && Angle_player2 > 25) ALORS
+					Angle_player ← Angle_player2
+					ECRIRE("Votre angle est : ", Angle_player, "°.")
+			FIN SI
+		FIN TANT QUE
+Fin
